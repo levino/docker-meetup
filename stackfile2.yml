@@ -1,0 +1,13 @@
+web:
+  image: dockercloud/hello-world
+  environment:
+    - VIRTUAL_HOST=http://www.dockermeetup.live
+  target_num_containers: 10
+lb:
+  image: dockercloud/haproxy:1.6.5
+  roles:
+    - global
+  links:
+    - web
+  ports:
+    - 80:80
