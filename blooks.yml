@@ -1,0 +1,64 @@
+mongo:
+  image: mongo:3
+  environment:
+    - AUTH=no
+    - LOG_LEVEL=debug
+  restart: always
+  tags:
+    - blooks
+redis:
+  image: redis:3
+  restart: always
+  tags:
+    - blooks
+dashboard:
+  image: 'blooks/dashboard:v0.1.5'
+  restart: always
+  environment:
+    - MONGO_URL=mongodb://mongo/blooks
+    - REDIS_URL=redis://redis
+    - VIRTUAL_HOST=http://www.dockermeetup.live,https://www.dockermeetup.live
+    - FORCE_SSL=true
+    - ROOT_URL=https://www.dockermeetup.live
+  tags:
+    - blooks
+address-generator:
+  image: 'blooks/address-generator:v0.0.8'
+  restart: always
+  environment:
+    - MONGO_URL=mongodb://mongo/blooks
+    - REDIS_URL=redis://redis
+  tags:
+    - blooks
+address-updater:
+  image: 'blooks/address-updater:v0.2.3'
+  restart: always
+  environment:
+    - MONGO_URL=mongodb://mongo/blooks
+    - REDIS_URL=redis://redis
+  tags:
+    - blooks
+transaction-fetcher:
+  image: 'blooks/transaction-fetcher:v0.1.3'
+  restart: always
+  environment:
+    - MONGO_URL=mongodb://mongo/blooks
+    - REDIS_URL=redis://redis
+  tags:
+   - blooks
+transaction-processor:
+  image: 'blooks/transaction-processor:v0.1.4'
+  restart: always
+  environment:
+    - MONGO_URL=mongodb://mongo/blooks
+    - REDIS_URL=redis://redis
+  tags:
+    - blooks
+currency-price-api:
+  image: 'levino/currency-prices:v0.1.3'
+  restart: always
+  environment:
+    - MONGO_URL=mongodb://mongo/pricecache
+    - VIRTUAL_HOST=https://api.blooks.io/prices/v1/*
+  tags:
+    - blooks
